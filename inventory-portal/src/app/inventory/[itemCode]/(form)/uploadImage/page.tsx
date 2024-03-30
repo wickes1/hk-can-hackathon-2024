@@ -36,7 +36,11 @@ const FormSchema = z.object({
     ),
 });
 
-export default function UploadImageForm() {
+export default function UploadImageForm({
+  params: { itemCode },
+}: {
+  params: { itemCode: string };
+}) {
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -44,17 +48,23 @@ export default function UploadImageForm() {
     mode: "onSubmit",
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following file:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify({ data }, null, 2)}
-          </code>
-        </pre>
-      ),
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const file = data.file?.[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send formData to server-side endpoint
+    const response = await fetch(`/api/inventory/${itemCode}/image`, {
+      method: "POST",
+      body: formData,
     });
+
+    if (response.ok) {
+      alert("OK");
+    } else {
+      // Handle error
+      alert("Failed");
+    }
   }
 
   function getImageData(event: ChangeEvent<HTMLInputElement>) {
