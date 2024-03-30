@@ -1,0 +1,1 @@
+- For Running Spring application with jacob.jar, jacob-1.19-x64.dll need to be copied to <jre-path>/bin
