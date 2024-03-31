@@ -25,8 +25,11 @@ public class InventoryEntity extends BaseEntity{
     private String quantity;
     private String size;
     private String expiryDate;
-    private String imageUrl;
     private Boolean isActive;
+
+    @OneToOne
+    @JoinColumn(name = "itemCode", referencedColumnName = "itemCode")
+    private InventoryDisplayPropertiesEntity inventoryDisplayProperties;
 
     public InventoryEntity(ItemInventoryRet qbInventoryItem){
         Map<String, String> customData = qbInventoryItem
