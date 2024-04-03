@@ -11,7 +11,8 @@ function ProductList({ products }: { products: inventory[] }) {
         grid-cols-2
         md:grid-cols-3
         lg:grid-cols-5
-        gap-5 mt-6
+        gap-10 mt-5 mx-5
+
         "
 		>
 			{products.map(product => (
