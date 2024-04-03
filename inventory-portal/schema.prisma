@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model inventory {
+  item_code   String    @id @db.VarChar(255)
+  create_date DateTime? @db.Timestamp(6)
+  update_date DateTime? @db.Timestamp(6)
+  bar_code    String?   @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  expiry_date String?   @db.VarChar(255)
+  is_active   Boolean?
+  quantity    String?   @db.VarChar(255)
+  size        String?   @db.VarChar(255)
+}
+
+model inventory_display_properties {
+  item_code   String    @id @db.VarChar(255)
+  create_date DateTime? @db.Timestamp(6)
+  update_date DateTime? @db.Timestamp(6)
+  categories  Json?
+  image_url   String?   @db.VarChar(255)
+}
+
+model scheduler {
+  id                  String                @id @db.VarChar(255)
+  is_active           Boolean?
+  is_locked           Boolean?
+  last_exec_date      DateTime?             @db.Timestamp(6)
+  lock_request_id     String?               @db.VarChar(255)
+  scheduler_error_log scheduler_error_log[]
+  scheduler_params    scheduler_params[]
+}
+
+model scheduler_error_log {
+  id           Int        @id @default(autoincrement())
+  log          String?    @db.VarChar(255)
+  report_date  DateTime?  @db.Timestamp(6)
+  scheduler_id String?    @db.VarChar(255)
+  scheduler    scheduler? @relation(fields: [scheduler_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkrorwp6w8fvm1bgfd3ogvwaxbe")
+
+  @@index([scheduler_id, report_date], map: "idxkroqcdnxo3ve62prb2rgirhue")
+}
+
+model scheduler_params {
+  id          String    @db.VarChar(255)
+  param_name  String    @db.VarChar(255)
+  param_value String?   @db.VarChar(255)
+  scheduler   scheduler @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fkc5ow9acha4l5et69p8sdwh139")
+
+  @@id([id, param_name])
+}
