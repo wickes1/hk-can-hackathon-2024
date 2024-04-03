@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class InventoryEntity extends BaseEntity{
     private String size;
     private String expiryDate;
     private Boolean isActive;
+    private String salesPrice;
 
     @OneToOne
     @JoinColumn(name = "itemCode", referencedColumnName = "itemCode")
@@ -44,5 +46,6 @@ public class InventoryEntity extends BaseEntity{
         this.size = customData.getOrDefault("itemsize", "");
         this.expiryDate = customData.getOrDefault("expirydate", "");
         this.isActive = Boolean.valueOf(qbInventoryItem.getIsActive()) ;
+        this.salesPrice = qbInventoryItem.getSalesPrice();
     }
 }
