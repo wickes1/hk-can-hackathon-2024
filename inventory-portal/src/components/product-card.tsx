@@ -29,8 +29,8 @@ async function ProductCard({ product }: { product: inventory }) {
 			</div>
 			<h2 className="text-lg mt-1 p-1">{product.description}</h2>
 			<div className="flex justify-between mt-1 p-1">
-				<h2>{product.quantity}</h2>
-				<h2>{product.size}</h2>
+				<h2>${product.sales_price}</h2>
+				<h2>QTY {product.quantity}</h2>
 			</div>
 		</div>
 	);
