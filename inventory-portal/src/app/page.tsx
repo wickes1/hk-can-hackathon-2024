@@ -1,10 +1,18 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import NavBar from "@/components/nav-bar";
+import ProductList from "@/components/product-list";
+import prisma from "@/lib/prisma";
+import { inventory } from "@prisma/client";
 
-export default function Home() {
-  return (
-    <div>
-      <Button>Click me</Button>
-    </div>
-  );
+export default async function Home() {
+	const products: inventory[] = await prisma.inventory.findMany({
+		skip: 0,
+		take: 10
+	});
+
+	return (
+		<div>
+			<NavBar />
+			<ProductList products={products} />
+		</div>
+	);
 }
