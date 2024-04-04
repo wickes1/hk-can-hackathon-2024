@@ -17,7 +17,7 @@ export async function fetchInventoryTotal(query: string) {
 }
 
 export async function findFilteredInventory(query: string, page: number) {
-	const products = await prisma.inventory.findMany({
+	const inventories = await prisma.inventory.findMany({
 		where: {
 			OR: [
 				{ bar_code: { contains: query, mode: "insensitive" } },
@@ -28,5 +28,5 @@ export async function findFilteredInventory(query: string, page: number) {
 		skip: (page - 1) * ITEMS_PER_PAGE,
 		take: ITEMS_PER_PAGE
 	});
-	return products;
+	return inventories;
 }

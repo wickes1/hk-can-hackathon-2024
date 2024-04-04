@@ -3,10 +3,10 @@ import { inventory } from "@prisma/client";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 
-async function ProductCard({ product }: { product: inventory }) {
+async function InventoryCard({ inventory: inventory }: { inventory: inventory }) {
 	const resp = await prisma.inventory_display_properties.findFirst({
 		where: {
-			item_code: product.item_code
+			item_code: inventory.item_code
 		},
 		select: {
 			image_url: true
@@ -24,18 +24,18 @@ async function ProductCard({ product }: { product: inventory }) {
 				/>
 			</div>
 			<div className="flex justify-between p-1">
-				<p className="truncate">{product.item_code}</p>
-				<p className="truncate">{product.bar_code}</p>
+				<p className="truncate">{inventory.item_code}</p>
+				<p className="truncate">{inventory.bar_code}</p>
 			</div>
 			<h2 className="text-lg mt-1 p-1 font-bold truncate hover:text-clip">
-				{product.description}
+				{inventory.description}
 			</h2>
 			<div className="flex justify-between mt-1 p-1">
-				<h2 className="font-bold truncate">${product.sales_price}</h2>
-				<h2 className="font-bold truncate">QTY {product.quantity}</h2>
+				<h2 className="font-bold truncate">${inventory.sales_price}</h2>
+				<h2 className="font-bold truncate">QTY {inventory.quantity}</h2>
 			</div>
 		</div>
 	);
 }
 
-export default ProductCard;
+export default InventoryCard;
