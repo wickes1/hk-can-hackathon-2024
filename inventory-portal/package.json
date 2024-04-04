@@ -33,12 +33,14 @@
     "uploadthing": "^6.7.0",
     "use-debounce": "^10.0.0",
     "vaul": "^0.9.0",
+    "winston": "^3.13.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/winston": "^2.4.4",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
