@@ -4,7 +4,7 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 
 async function ProductCard({ product }: { product: inventory }) {
-	const image_url = await prisma.inventory_display_properties.findFirst({
+	const resp = await prisma.inventory_display_properties.findFirst({
 		where: {
 			item_code: product.item_code
 		},
@@ -16,11 +16,7 @@ async function ProductCard({ product }: { product: inventory }) {
 		<div className="mt-2  p-2 rounded-lg  shadow-lg hover: transform hover:-translate-y-1 hover:scale-110 transition-all duration-200 ease-in-out cursor-pointer">
 			<div className="flex justify-center">
 				<Image
-					src={
-						image_url
-							? image_url.image_url
-							: "/inventory_default.png"
-					}
+					src={resp?.image_url ? resp.image_url : "/inventory_default.png"}
 					alt="inventory"
 					width={300}
 					height={300}
