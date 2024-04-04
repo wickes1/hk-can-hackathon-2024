@@ -28,16 +28,16 @@ export async function POST(
   { params }: { params: { itemCode: string } }
 ) {
   try {
-    const formData = await req.formData();
-    const parsed = schema.parse(Object.fromEntries(formData.entries()));
-    const result = await utapi.uploadFiles(parsed.file);
-
     // ensure that the itemCode exists in database
     await prisma.inventory.findUniqueOrThrow({
       where: {
         item_code: params.itemCode,
       },
     });
+
+    const formData = await req.formData();
+    const parsed = schema.parse(Object.fromEntries(formData.entries()));
+    const result = await utapi.uploadFiles(parsed.file);
 
     // upsert inventory display property entity
     let upsertArgs: Prisma.inventory_display_propertiesUpsertArgs = {
