@@ -1,6 +1,7 @@
 import InventoryList from "@/components/inventory-list";
 import Pagination from "@/components/pagination";
 import { fetchInventoryTotal } from "@/lib/data";
+import { InventorySortType } from "@/lib/definitions";
 
 export default async function Inventory({
 	searchParams
@@ -8,10 +9,12 @@ export default async function Inventory({
 	searchParams?: {
 		query?: string;
 		page?: string;
+		sort?: InventorySortType;
 	};
 }) {
 	const query = searchParams?.query || "";
 	const currentPage = Number(searchParams?.page) || 1;
+	const sort = searchParams?.sort || "price-asc";
 	const [totalPages, totalCount] = await fetchInventoryTotal(query);
 
 	return (
@@ -21,7 +24,11 @@ export default async function Inventory({
 					<p className="text-lg">{totalCount} items found</p>
 				</div>
 				<div className="grow">
-					<InventoryList query={query} page={currentPage} />
+					<InventoryList
+						query={query}
+						page={currentPage}
+						sort={sort}
+					/>
 				</div>
 				<div className="flex self-end w-full justify-center mb-2">
 					<Pagination totalPages={totalPages} />
