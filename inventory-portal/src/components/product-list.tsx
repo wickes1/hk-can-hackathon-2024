@@ -6,29 +6,30 @@ import ProductDetails from "./product-details";
 import { findFilteredInventory } from "@/lib/data";
 
 async function ProductList({ query, page }: { query: string; page: number }) {
-	const products: inventory[] = await findFilteredInventory(query, page);
+  const products: inventory[] = await findFilteredInventory(query, page);
 
-	return (
-		<div
-			className="grid
+  return (
+    <div
+      className="grid
         grid-cols-2
         md:grid-cols-3
-        lg:grid-cols-5
-        gap-10 mt-5 mx-5
+        lg:grid-cols-3
+        xl:grid-cols-5
+        gap-10
         "
-		>
-			{products.map(product => (
-				<Drawer key={product.item_code}>
-					<DrawerTrigger>
-						<ProductCard product={product} />
-					</DrawerTrigger>
-					<DrawerContent>
-						<ProductDetails product={product} />
-					</DrawerContent>
-				</Drawer>
-			))}
-		</div>
-	);
+    >
+      {products.map((product) => (
+        <Drawer key={product.item_code}>
+          <DrawerTrigger>
+            <ProductCard product={product} />
+          </DrawerTrigger>
+          <DrawerContent>
+            <ProductDetails product={product} />
+          </DrawerContent>
+        </Drawer>
+      ))}
+    </div>
+  );
 }
 
 export default ProductList;

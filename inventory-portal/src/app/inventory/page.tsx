@@ -15,14 +15,18 @@ export default async function Inventory({
   const [totalPages, totalCount] = await fetchInventoryTotal(query);
 
   return (
-    <div>
-      <div className="mt-5 flex justify-center">
-        <p className="text-lg">{totalCount} items found</p>
-      </div>
-      <ProductList query={query} page={currentPage} />
+    <div className="bg-gray-200 h-[90%] overflow-y-scroll">
+      <div className="flex flex-col gap-5 mx-5">
+        <div className="flex justify-center mt-2">
+          <p className="text-lg">{totalCount} items found</p>
+        </div>
+        <div className="grow">
+          <ProductList query={query} page={currentPage} />
+        </div>
 
-      <div className="mt-10 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
+        <div className="flex self-end w-full justify-center mb-2">
+          <Pagination totalPages={totalPages} />
+        </div>
       </div>
     </div>
   );
