@@ -3,8 +3,11 @@ import { inventory } from "@prisma/client";
 import ProductCard from "./product-card";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import ProductDetails from "./product-details";
+import { findFilteredInventory } from "@/lib/data";
 
-function ProductList({ products }: { products: inventory[] }) {
+async function ProductList({ query, page }: { query: string; page: number }) {
+	const products: inventory[] = await findFilteredInventory(query, page);
+
 	return (
 		<div
 			className="grid
@@ -12,7 +15,6 @@ function ProductList({ products }: { products: inventory[] }) {
         md:grid-cols-3
         lg:grid-cols-5
         gap-10 mt-5 mx-5
-
         "
 		>
 			{products.map(product => (
