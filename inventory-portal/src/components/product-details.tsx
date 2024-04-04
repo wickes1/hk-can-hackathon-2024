@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { inventory } from "@prisma/client";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
 
 async function ProductDetails({ product }: { product: inventory }) {
 	const image_url = await prisma.inventory_display_properties.findFirst({
@@ -13,8 +15,13 @@ async function ProductDetails({ product }: { product: inventory }) {
 		}
 	});
 	return (
-		<div>
-			<div className="flex justify-center">
+		<div className="flex justify-center">
+			<div className="flex flex-col mt-5 gap-2 w-1/2 items-center">
+				<Button variant="outline" asChild className=" w-full">
+					<Link href={`/inventory/${product.item_code}/uploadImage`}>
+						Edit Item Photo
+					</Link>
+				</Button>
 				<Image
 					src={
 						image_url
@@ -22,14 +29,30 @@ async function ProductDetails({ product }: { product: inventory }) {
 							: "/inventory_default.png"
 					}
 					alt="inventory"
-					width={500}
-					height={500}
-					className="h-[500px] w-[500px] object-contain"
+					width={300}
+					height={300}
+					className="size-1/2 object-contain"
 				/>
-			</div>
-			<div className="flex justify-between p-1">
-				<p className=" text-gray-400">{product.item_code}</p>
-				<p className=" text-gray-400">{product.bar_code}</p>
+				<div className="w-full xl:w-3/4">
+					<div className="border border-black" />
+					<div className="flex items-center justify-between p-1 ">
+						<p className="">{product.item_code}</p>
+						<p className="">{product.bar_code}</p>
+					</div>
+				</div>
+
+				<h2 className="font-bold flex-start">{product.description}</h2>
+
+				<div className="grid gap-2">
+					<div className="grid grid-cols-3 items-center gap-4">
+						<Label>Size</Label>
+						<h2>{product.size}</h2>
+					</div>
+					<div className="grid grid-cols-3 items-center gap-4">
+						<Label>Selling Price</Label>
+						<h2>${product.sales_price}</h2>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
