@@ -15,8 +15,8 @@ model inventory {
   description String?   @db.VarChar(255)
   expiry_date String?   @db.VarChar(255)
   is_active   Boolean?
-  quantity    String?   @db.VarChar(255)
-  sales_price String?   @db.VarChar(255)
+  quantity    Int?
+  sales_price Decimal?  @db.Decimal(19, 2)
   size        String?   @db.VarChar(255)
 }
 

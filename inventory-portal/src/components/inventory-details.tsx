@@ -5,10 +5,10 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
-async function ProductDetails({ product }: { product: inventory }) {
+async function InventoryDetails({ inventory: inventory }: { inventory: inventory }) {
 	const resp = await prisma.inventory_display_properties.findFirst({
 		where: {
-			item_code: product.item_code
+			item_code: inventory.item_code
 		},
 		select: {
 			image_url: true
@@ -18,7 +18,7 @@ async function ProductDetails({ product }: { product: inventory }) {
 		<div className="flex justify-center">
 			<div className="flex flex-col mt-5 gap-2 w-1/2 items-center">
 				<Button variant="outline" asChild className=" w-full">
-					<Link href={`/inventory/${product.item_code}/uploadImage`}>
+					<Link href={`/inventory/${inventory.item_code}/uploadImage`}>
 						Edit Item Photo
 					</Link>
 				</Button>
@@ -36,21 +36,21 @@ async function ProductDetails({ product }: { product: inventory }) {
 				<div className="w-full xl:w-3/4">
 					<div className="border border-black" />
 					<div className="flex items-center justify-between p-1 ">
-						<p className="">{product.item_code}</p>
-						<p className="">{product.bar_code}</p>
+						<p className="">{inventory.item_code}</p>
+						<p className="">{inventory.bar_code}</p>
 					</div>
 				</div>
 
-				<h2 className="font-bold flex-start">{product.description}</h2>
+				<h2 className="font-bold flex-start">{inventory.description}</h2>
 
 				<div className="grid gap-2">
 					<div className="grid grid-cols-3 items-center gap-4">
 						<Label>Size</Label>
-						<h2>{product.size}</h2>
+						<h2>{inventory.size}</h2>
 					</div>
 					<div className="grid grid-cols-3 items-center gap-4">
 						<Label>Selling Price</Label>
-						<h2>${product.sales_price}</h2>
+						<h2>${inventory.sales_price}</h2>
 					</div>
 				</div>
 			</div>
@@ -58,4 +58,4 @@ async function ProductDetails({ product }: { product: inventory }) {
 	);
 }
 
-export default ProductDetails;
+export default InventoryDetails;

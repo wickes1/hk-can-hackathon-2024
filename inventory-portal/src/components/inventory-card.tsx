@@ -4,10 +4,10 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { CircleSlash, DollarSign, ScanBarcode, Warehouse } from "lucide-react";
 
-async function ProductCard({ product }: { product: inventory }) {
+async function InventoryCard({ inventory: inventory }: { inventory: inventory }) {
   const resp = await prisma.inventory_display_properties.findFirst({
     where: {
-      item_code: product.item_code,
+      item_code: inventory.item_code,
     },
     select: {
       image_url: true,
@@ -28,24 +28,24 @@ async function ProductCard({ product }: { product: inventory }) {
         <div className="flex flex-col gap-1 p-1 text-xs md:flex-row md:justify-between">
           <div className="flex gap-0.5 items-center">
             <CircleSlash size={16} />
-            <p>{product.item_code}</p>
+            <p>{inventory.item_code}</p>
           </div>
           <div className="flex gap-0.5 items-center">
             <ScanBarcode size={16} />
-            <p className="truncate">{product.bar_code}</p>
+            <p className="truncate">{inventory.bar_code}</p>
           </div>
         </div>
         <h2 className="text-lg mt-1 p-1 font-bold h-16 text-wrap line-clamp-2">
-          {product.description}
+          {inventory.description}
         </h2>
         <div className="flex justify-between my-1 p-1 text-sm">
           <div className="flex gap-0.5 items-center">
             <DollarSign size={16} />
-            <p>{product.sales_price}</p>
+            <p>{inventory.sales_price}</p>
           </div>
           <div className="flex gap-0.5 items-center">
             <Warehouse size={16} />
-            <p>{product.quantity}</p>
+            <p>{inventory.quantity}</p>
           </div>
         </div>
       </div>
@@ -53,4 +53,4 @@ async function ProductCard({ product }: { product: inventory }) {
   );
 }
 
-export default ProductCard;
+export default InventoryCard;

@@ -1,3 +1,4 @@
+import { InventorySortType } from "./definitions";
 import prisma from "./prisma";
 
 const ITEMS_PER_PAGE = 10;
@@ -16,8 +17,29 @@ export async function fetchInventoryTotal(query: string) {
 	return [Math.ceil(count / ITEMS_PER_PAGE), count];
 }
 
-export async function findFilteredInventory(query: string, page: number) {
-	const products = await prisma.inventory.findMany({
+function getOrderBy(
+	sort?: InventorySortType
+): { [key: string]: "asc" | "desc" } | undefined {
+	switch (sort) {
+		case "price-asc":
+			return { sales_price: "asc" };
+		case "price-desc":
+			return { sales_price: "desc" };
+		case "quantity-asc":
+			return { quantity: "asc" };
+		case "quantity-desc":
+			return { quantity: "desc" };
+		default:
+			return undefined;
+	}
+}
+
+export async function findFilteredInventory(
+	query: string,
+	page: number,
+	sort?: InventorySortType
+) {
+	const inventories = await prisma.inventory.findMany({
 		where: {
 			OR: [
 				{ bar_code: { contains: query, mode: "insensitive" } },
@@ -26,7 +48,13 @@ export async function findFilteredInventory(query: string, page: number) {
 			]
 		},
 		skip: (page - 1) * ITEMS_PER_PAGE,
-		take: ITEMS_PER_PAGE
+		take: ITEMS_PER_PAGE,
+		// if sort is price-asc, sort by price in ascending order
+		// if sort is price-desc, sort by price in descending order
+		// if sort is quantity-asc, sort by quantity in ascending order
+		// if sort is quantity-desc, sort by quantity in descending order
+        orderBy: getOrderBy(sort)
 	});
-	return products;
+
+	return inventories;
 }

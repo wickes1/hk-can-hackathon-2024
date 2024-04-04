@@ -47,7 +47,7 @@ export default async function FilterWidget() {
 
 					<Label className="font-bold">Filter</Label>
 
-					<div className="flex gap-3 items-center jc">
+					<div className="flex gap-3 items-center">
 						<Checkbox id="terms" />
 						<Label
 							htmlFor="terms"
