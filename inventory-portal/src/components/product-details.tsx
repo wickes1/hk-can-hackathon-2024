@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
 async function ProductDetails({ product }: { product: inventory }) {
-	const image_url = await prisma.inventory_display_properties.findFirst({
+	const resp = await prisma.inventory_display_properties.findFirst({
 		where: {
 			item_code: product.item_code
 		},
@@ -24,8 +24,8 @@ async function ProductDetails({ product }: { product: inventory }) {
 				</Button>
 				<Image
 					src={
-						image_url
-							? image_url.image_url
+						resp?.image_url
+							? resp.image_url
 							: "/inventory_default.png"
 					}
 					alt="inventory"
