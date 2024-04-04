@@ -5,7 +5,7 @@ import com.hackathon.QBDemo.constant.QBQueryConstant.ResponseStatus;
 import com.hackathon.QBDemo.constant.SchedulerConstant.SchedulerExceptionCode;
 import com.hackathon.QBDemo.constant.SchedulerConstant.SchedulerKey;
 import com.hackathon.QBDemo.exception.AppSchedulerException;
-import com.hackathon.QBDemo.factory.qbQuery.QBInventoryItemRetrievalQueryFactory;
+import com.hackathon.QBDemo.factory.qbQuery.QBInventoryQueryRqFactory;
 import com.hackathon.QBDemo.model.entity.InventoryEntity;
 import com.hackathon.QBDemo.model.qbXml.ItemInventoryQueryRsType;
 import com.hackathon.QBDemo.model.qbXml.QBXML;
@@ -21,12 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.hackathon.QBDemo.constant.QBQueryConstant.qbQueryModifiedDateformat;
 import static com.hackathon.QBDemo.constant.SchedulerConstant.SchedulerExceptionCode.SCHEDULER_PARAMS_NOT_FOUND;
 
 @Component
@@ -35,7 +37,7 @@ public class QBInventorySyncSchedulerProcessor extends SchedulerProcessor {
     private final Logger logger = LoggerFactory.getLogger(QBInventorySyncSchedulerProcessor.class);
     private final InventoryRepository inventoryRepository;
     private final QBXmlRequestProcessorService qbXmlRequestProcessorService;
-    private final QBInventoryItemRetrievalQueryFactory queryFactory;
+    private final QBInventoryQueryRqFactory qbInventoryQueryRqFactory;
     private final SchedulerParamsService schedulerParamsService;
     private enum schedulerParamsEnum {
         NextQueryStartDate
@@ -46,12 +48,12 @@ public class QBInventorySyncSchedulerProcessor extends SchedulerProcessor {
                                              SchedulerParamsService schedulerParamsService,
                                              SchedulerErrorLogService schedulerErrorLogService,
                                              QBXmlRequestProcessorService qbRequestProcessorService,
-                                             QBInventoryItemRetrievalQueryFactory queryFactory){
+                                             QBInventoryQueryRqFactory queryFactory){
         super(schedulerService, schedulerErrorLogService);
         this.schedulerParamsService = schedulerParamsService;
         this.inventoryRepository = inventoryRepository;
         this.qbXmlRequestProcessorService = qbRequestProcessorService;
-        this.queryFactory = queryFactory;
+        this.qbInventoryQueryRqFactory = queryFactory;
     }
 
     @Override
@@ -93,10 +95,10 @@ public class QBInventorySyncSchedulerProcessor extends SchedulerProcessor {
             while (remainingCount.compareTo(BigInteger.ZERO) > 0 || isFirstIterate) {
                 if (isFirstIterate) {
                     isFirstIterate = false;
-                    inventoryQuery = queryFactory.getAll(requestId, dataFromDate, executeDate);
+                    inventoryQuery = qbInventoryQueryRqFactory.getAll(requestId, executeDate);
                 } else {
                     // query to continue the iteration of the query created by first iteration, by using the iteratorId returned by the previous iteration
-                    inventoryQuery = queryFactory.getNextIteration(requestId, inventoryResponse.getIteratorID());
+                    inventoryQuery = qbInventoryQueryRqFactory.getNextIteration(requestId, inventoryResponse.getIteratorID());
                 }
                 // send request to Quickbook
                 Variant qbResponse = qbXmlRequestProcessorService.sendRequest(qbSession, QBXmlMarshaller.marshall(inventoryQuery));
@@ -123,9 +125,28 @@ public class QBInventorySyncSchedulerProcessor extends SchedulerProcessor {
                 }
 
                 // Loop the response array, create entity and save to database
+                // As of 2024-04-04, updates on quantity on hand won't include in Inventory Query Request with modified date filtering
+                // As consequence, whole dataset need to be query out and do custom filtering in backend logic
                 List<InventoryEntity> dataToAdd = inventoryResponse
                         .getItemInventoryRet()
                         .stream()
+                        .filter((entry) -> {
+                            boolean isWithinDateRange = false;
+                            Date recordModifiedDate = null;
+                            try {
+                                // notices that the simple date format used to parse date string is constructed without timezone
+                                // which quickbook have timezone issue, same date and time was updated in QB database, but with different timezone with server
+                                recordModifiedDate = qbQueryModifiedDateformat.parse(entry.getTimeModified());
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                            if(dataFromDate != null)
+                                isWithinDateRange = recordModifiedDate.compareTo(dataFromDate) >= 0 && recordModifiedDate.compareTo(executeDate) <= 0;
+                            else
+                                isWithinDateRange = recordModifiedDate.compareTo(executeDate) <= 0;
+
+                            return isWithinDateRange;
+                        })
                         .map(InventoryEntity::new)
                         .collect(Collectors.toList());
 

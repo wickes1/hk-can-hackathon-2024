@@ -1,29 +1,28 @@
 package com.hackathon.QBDemo.factory.qbQuery;
 
 import com.hackathon.QBDemo.constant.QBQueryConstant;
-import com.hackathon.QBDemo.model.qbXml.ItemInventoryQueryRqType;
-import com.hackathon.QBDemo.model.qbXml.QBXML;
+import com.hackathon.QBDemo.model.qbXml.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Date;
 
-import static com.hackathon.QBDemo.constant.QBQueryConstant.qbQueryDateformat;
+import static com.hackathon.QBDemo.constant.QBQueryConstant.qbQueryModifiedDateformat;
 
 @Service
-public class QBInventoryItemRetrievalQueryFactory extends QBDataRetrievalQueryFactory<ItemInventoryQueryRqType> {
+public class QBInventoryQueryRqFactory extends QBDataRetrievalQueryFactory {
     private final BigInteger qbQueryLimit = new BigInteger("100");
 
-    public QBXML getAll(String qbRequestId, Date fromDate, Date toDate){
+    public QBXML getAll(String qbRequestId, Date toDate){
         createBaseQBXmlMsgRq();
+
+        // constructing ItemInventoryQuery
         ItemInventoryQueryRqType inventoryQuery = createBaseInventoryQuery(qbRequestId, QBQueryConstant.RecordActiveStatus.All);
         // use iterator to prevent query all data in once
         inventoryQuery.setIterator(QBQueryConstant.Iterator.Start.toString());
-        if(fromDate != null)
-            inventoryQuery.setFromModifiedDate(qbQueryDateformat.format(fromDate));
-        if(toDate != null)
-            inventoryQuery.setToModifiedDate(qbQueryDateformat.format(toDate));
+        inventoryQuery.setToModifiedDate(qbQueryModifiedDateformat.format(toDate));
         addQuery(inventoryQuery);
+
         return getQbxml();
     }
 

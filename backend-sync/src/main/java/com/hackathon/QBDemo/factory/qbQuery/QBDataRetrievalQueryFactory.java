@@ -4,7 +4,7 @@ import com.hackathon.QBDemo.model.qbXml.QBXML;
 
 import java.util.Date;
 
-public abstract class QBDataRetrievalQueryFactory<T> extends QBQueryFactory<T> {
-    public abstract QBXML getAll(String qbRequestId, Date fromDate, Date toDate);
+public abstract class QBDataRetrievalQueryFactory extends QBQueryFactory {
+    public abstract QBXML getAll(String qbRequestId, Date toDate);
     public abstract QBXML getNextIteration(String qbRequestId, String iteratorId);
 }
