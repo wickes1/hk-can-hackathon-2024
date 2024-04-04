@@ -19,7 +19,7 @@ async function InventoryDetails({
     },
   });
   return (
-    <div className="flex w-[80%] lg:w-[55%] xl:w-[45%] h-[32rem] mx-auto justify-center overflow-auto">
+    <div className="flex w-[80%] lg:w-[55%] xl:w-[45%] h-[32rem] mx-auto justify-center overflow-auto mb-5">
       <div className="flex flex-col w-full mt-5 gap-2">
         <div className="flex flex-col gap-3 items-center">
           <Button variant="outline" asChild className="w-4/5">
@@ -89,7 +89,7 @@ async function InventoryDetails({
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex justify-between items-center">
           <Label className="text-base">Last Sync</Label>
           <p>{inventory.update_date?.toISOString()}</p>
         </div>
