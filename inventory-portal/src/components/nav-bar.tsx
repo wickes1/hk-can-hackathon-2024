@@ -1,5 +1,5 @@
 import Search from "./search";
-import FilterWidget from "./fliter-widget";
+import FilterSheet from "./fliter-sheet";
 
 async function NavBar() {
 	return (
@@ -7,7 +7,7 @@ async function NavBar() {
 			<h2 className="text-2xl font-bold text-white">Catalog</h2>
 			<div className="flex gap-5 items-center">
 				<Search placeholder="Search Item" />
-				<FilterWidget />
+				<FilterSheet />
 			</div>
 		</div>
 	);
