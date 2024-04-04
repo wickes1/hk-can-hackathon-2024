@@ -15,7 +15,7 @@ export default async function Inventory({
   const [totalPages, totalCount] = await fetchInventoryTotal(query);
 
   return (
-    <div className="bg-gray-200 h-[90%] overflow-y-scroll">
+    <div className="bg-gray-200 h-[90%] overflow-auto">
       <div className="flex flex-col gap-5 mx-5">
         <div className="flex justify-center mt-2">
           <p className="text-lg">{totalCount} items found</p>
