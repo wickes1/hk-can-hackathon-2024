@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 public class QBQueryConstant {
 
-    public static final DateFormat qbQueryDateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateFormat qbQueryModifiedDateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     public enum RecordActiveStatus {
         ActiveOnly,

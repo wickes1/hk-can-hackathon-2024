@@ -1,9 +1,8 @@
-import React from "react";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { findFilteredInventory } from "@/lib/data";
 import { inventory } from "@prisma/client";
 import InventoryCard from "./inventory-card";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import InventoryDetails from "./inventory-details";
-import { findFilteredInventory } from "@/lib/data";
 
 async function InventoryList({ query, page }: { query: string; page: number }) {
 	const inventories: inventory[] = await findFilteredInventory(query, page);
@@ -11,11 +10,11 @@ async function InventoryList({ query, page }: { query: string; page: number }) {
 	return (
 		<div
 			className="grid
-        grid-cols-1
-        sm:grid-cols-2
+        grid-cols-2
         md:grid-cols-3
-        lg:grid-cols-5
-        gap-10 mt-5 mx-5
+        lg:grid-cols-3
+        xl:grid-cols-5
+        gap-10
         "
 		>
 			{inventories.map(inventory => (
