@@ -11,7 +11,7 @@ import { inventoryImageUploadConfig } from "@/constant/file-upload-configuration
 
 const schema = z.object({
   file: z
-    .instanceof(File)
+    .any()
     .refine(
       (file) => file.size <= inventoryImageUploadConfig.MAX_UPLOAD_SIZE,
       AppError.INVENTORY_IMAGE_FILE_TOO_LARGE.errorCode
@@ -37,7 +37,7 @@ export async function POST(
 
     const formData = await req.formData();
     const parsed = schema.parse(Object.fromEntries(formData.entries()));
-    const result = await utapi.uploadFiles(parsed.file);
+    const uploadResult = await utapi.uploadFiles(parsed.file);
 
     // upsert inventory display property entity
     let upsertArgs: Prisma.inventory_display_propertiesUpsertArgs = {
@@ -46,12 +46,25 @@ export async function POST(
       },
       create: {
         item_code: params.itemCode,
-        image_url: result.data?.url,
+        image_url: uploadResult.data?.url,
       },
       update: {
-        image_url: result.data?.url,
+        image_url: uploadResult.data?.url,
       },
     };
+
+    const existingDisplayProperty =
+      await prisma.inventory_display_properties.findFirst({
+        where: {
+          item_code: params.itemCode,
+        },
+      });
+
+    if (existingDisplayProperty?.image_url) {
+      const imageLink = existingDisplayProperty.image_url.split("/");
+      await utapi.deleteFiles(imageLink[imageLink.length - 1]);
+    }
+
     await prisma.inventory_display_properties.upsert(upsertArgs);
 
     return NextResponse.json(new GenericResponseModel({ isSuccess: true }));
