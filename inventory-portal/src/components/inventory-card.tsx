@@ -4,7 +4,11 @@ import Image from "next/image";
 import prisma from "@/lib/prisma";
 import { CircleSlash, DollarSign, ScanBarcode, Warehouse } from "lucide-react";
 
-async function InventoryCard({ inventory: inventory }: { inventory: inventory }) {
+async function InventoryCard({
+  inventory: inventory,
+}: {
+  inventory: inventory;
+}) {
   const resp = await prisma.inventory_display_properties.findFirst({
     where: {
       item_code: inventory.item_code,
@@ -41,11 +45,11 @@ async function InventoryCard({ inventory: inventory }: { inventory: inventory })
         <div className="flex justify-between my-1 p-1 text-sm">
           <div className="flex gap-0.5 items-center">
             <DollarSign size={16} />
-            <p>{inventory.sales_price}</p>
+            <p>{inventory.sales_price?.toString()}</p>
           </div>
           <div className="flex gap-0.5 items-center">
             <Warehouse size={16} />
-            <p>{inventory.quantity}</p>
+            <p>{inventory.quantity?.toString()}</p>
           </div>
         </div>
       </div>

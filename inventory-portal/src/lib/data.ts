@@ -30,7 +30,7 @@ function getOrderBy(
 		case "quantity-desc":
 			return { quantity: "desc" };
 		default:
-			return undefined;
+			return { item_code: "asc" };
 	}
 }
 
@@ -53,7 +53,7 @@ export async function findFilteredInventory(
 		// if sort is price-desc, sort by price in descending order
 		// if sort is quantity-asc, sort by quantity in ascending order
 		// if sort is quantity-desc, sort by quantity in descending order
-        orderBy: getOrderBy(sort)
+		orderBy: getOrderBy(sort)
 	});
 
 	return inventories;

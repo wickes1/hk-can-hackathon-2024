@@ -14,7 +14,7 @@ export default async function Inventory({
 }) {
 	const query = searchParams?.query || "";
 	const currentPage = Number(searchParams?.page) || 1;
-	const sort = searchParams?.sort || "price-asc";
+	const sort = searchParams?.sort || undefined;
 	const [totalPages, totalCount] = await fetchInventoryTotal(query);
 
 	return (

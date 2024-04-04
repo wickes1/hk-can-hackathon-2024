@@ -25,7 +25,7 @@ import { InventorySortType } from "@/lib/definitions";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { string, z } from "zod";
 
 import {
 	Form,
@@ -37,11 +37,10 @@ import {
 	FormMessage
 } from "@/components/ui/form";
 import { toast } from "./ui/use-toast";
+import { Checkbox } from "./ui/checkbox";
 
 const FormSchema = z.object({
-	sort: z.string({
-		required_error: "Please select a sorting option"
-	})
+	sort: string().optional()
 });
 
 export default function FilterSheet() {
@@ -53,9 +52,16 @@ export default function FilterSheet() {
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		// on submit update the URL with the new sort value
-		const sort = data.sort as InventorySortType;
+
+		const sort = (data.sort as InventorySortType) || undefined;
 		const newSearchParams = new URLSearchParams(searchParams);
-		newSearchParams.set("sort", sort);
+
+		if (sort) {
+			newSearchParams.set("sort", sort);
+		} else {
+			newSearchParams.delete("sort");
+		}
+
 		const updatedUrl = `${pathname}?${newSearchParams.toString()}`;
 		window.location.href = updatedUrl;
 	}
@@ -118,6 +124,15 @@ export default function FilterSheet() {
 														</SelectItem>
 													</SelectContent>
 												</Select>
+											</div>
+											<div className="flex gap-3 items-center">
+												<Checkbox id="available-items" />
+												<Label
+													htmlFor="available-items"
+													className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+												>
+													Show Available items only
+												</Label>
 											</div>
 										</div>
 									</FormItem>
