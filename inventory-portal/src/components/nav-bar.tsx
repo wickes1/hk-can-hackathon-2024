@@ -8,7 +8,9 @@ async function NavBar() {
 		<div className="h-[10%] flex justify-between items-center px-5 py-3 shadow bg-slate-900">
 			<h2 className="text-2xl font-bold text-white">Inventory Catalog</h2>
 			<div className="flex gap-5 items-center">
-				<Search placeholder="Search Item" />
+				<Suspense fallback={<div>Loading...</div>}>
+					<Search placeholder="Search Item" />
+				</Suspense>
 				<Suspense fallback={<FilterSheetSkeleton />}>
 					<FilterSheet />
 				</Suspense>
