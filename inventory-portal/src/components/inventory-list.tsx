@@ -9,14 +9,22 @@ async function InventoryList({
   query,
   page,
   sort,
-  availableItems,
+  availableItemsOnly,
+  showInactiveItems,
 }: {
   query: string;
   page: number;
   sort: InventorySortType;
-  availableItems: boolean;
+  availableItemsOnly: boolean;
+  showInactiveItems: boolean;
 }) {
-  const inventories: inventory[] = await findFilteredInventory(query, page, sort, availableItems);
+  const inventories: inventory[] = await findFilteredInventory(
+    query,
+    page,
+    sort,
+    availableItemsOnly,
+    showInactiveItems,
+  );
 
   return (
     <div

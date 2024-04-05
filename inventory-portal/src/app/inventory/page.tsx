@@ -12,14 +12,20 @@ export default async function Inventory({
     query?: string;
     page?: string;
     sort?: InventorySortType;
-    availableItems?: boolean;
+    availableItemsOnly?: boolean;
+    showInactiveItems?: boolean;
   };
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const sort = searchParams?.sort || 'item_code-asc';
-  const availableItems = searchParams?.availableItems || false;
-  const [totalPages, totalCount] = await fetchInventoryTotal(query, availableItems);
+  const availableItemsOnly = searchParams?.availableItemsOnly || false;
+  const showInactiveItems = searchParams?.showInactiveItems || false;
+  const [totalPages, totalCount] = await fetchInventoryTotal(
+    query,
+    availableItemsOnly,
+    showInactiveItems,
+  );
 
   return (
     <div className="h-[90%] min-h-screen bg-gray-200">
@@ -35,7 +41,8 @@ export default async function Inventory({
               query={query}
               page={currentPage}
               sort={sort}
-              availableItems={availableItems}
+              availableItemsOnly={availableItemsOnly}
+              showInactiveItems={showInactiveItems}
             />
           </Suspense>
         </div>
