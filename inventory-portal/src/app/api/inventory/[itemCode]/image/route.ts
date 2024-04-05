@@ -1,32 +1,28 @@
-import { utapi } from "@/lib/uploadthing";
-import { GenericResponseModel } from "@/model/generic-response.model";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
-import { ZodError, z } from "zod";
-import logger from "../../../../../../logger";
-import { AppError } from "@/constant/app-error";
-import prisma from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
-import { inventoryImageUploadConfig } from "@/constant/file-upload-configuration";
+import { utapi } from '@/lib/uploadthing';
+import { GenericResponseModel } from '@/model/generic-response.model';
+import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { ZodError, z } from 'zod';
+import logger from '../../../../../../logger';
+import { AppError } from '@/constant/app-error';
+import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+import { inventoryImageUploadConfig } from '@/constant/file-upload-configuration';
 
 const schema = z.object({
   file: z
     .any()
     .refine(
       (file) => file.size <= inventoryImageUploadConfig.MAX_UPLOAD_SIZE,
-      AppError.INVENTORY_IMAGE_FILE_TOO_LARGE.errorCode
+      AppError.INVENTORY_IMAGE_FILE_TOO_LARGE.errorCode,
     )
     .refine(
-      (file) =>
-        inventoryImageUploadConfig.ACCEPTED_FILE_TYPES.includes(file.type),
-      AppError.INVENTORY_IMAGE_WRONG_FILE_TYPE.errorCode
+      (file) => inventoryImageUploadConfig.ACCEPTED_FILE_TYPES.includes(file.type),
+      AppError.INVENTORY_IMAGE_WRONG_FILE_TYPE.errorCode,
     ),
 });
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { itemCode: string } }
-) {
+export async function POST(req: NextRequest, { params }: { params: { itemCode: string } }) {
   try {
     // ensure that the itemCode exists in database
     await prisma.inventory.findUniqueOrThrow({
@@ -53,15 +49,14 @@ export async function POST(
       },
     };
 
-    const existingDisplayProperty =
-      await prisma.inventory_display_properties.findFirst({
-        where: {
-          item_code: params.itemCode,
-        },
-      });
+    const existingDisplayProperty = await prisma.inventory_display_properties.findFirst({
+      where: {
+        item_code: params.itemCode,
+      },
+    });
 
     if (existingDisplayProperty?.image_url) {
-      const imageLink = existingDisplayProperty.image_url.split("/");
+      const imageLink = existingDisplayProperty.image_url.split('/');
       await utapi.deleteFiles(imageLink[imageLink.length - 1]);
     }
 
@@ -71,12 +66,9 @@ export async function POST(
   } catch (error) {
     if (error instanceof ZodError) {
       logger.error(JSON.stringify(error));
-      return NextResponse.json(
-        new GenericResponseModel({ isSuccess: false, zodError: error }),
-        {
-          status: 400,
-        }
-      );
+      return NextResponse.json(new GenericResponseModel({ isSuccess: false, zodError: error }), {
+        status: 400,
+      });
     }
 
     logger.error(error);
@@ -85,7 +77,7 @@ export async function POST(
         isSuccess: false,
         errorCode: AppError.INTERNAL_SERVER_ERROR.errorCode,
       }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
