@@ -23,11 +23,11 @@ public class InventoryEntity extends BaseEntity{
     private String itemCode;
     private String barCode;
     private String description;
-    private String quantity;
+    private Integer quantity;
     private String size;
     private String expiryDate;
     private Boolean isActive;
-    private String salesPrice;
+    private BigDecimal salesPrice;
 
     @OneToOne
     @JoinColumn(name = "itemCode", referencedColumnName = "itemCode")
@@ -42,10 +42,10 @@ public class InventoryEntity extends BaseEntity{
         this.itemCode = qbInventoryItem.getName();
         this.barCode = customData.getOrDefault("barcode", "");
         this.description = qbInventoryItem.getSalesDesc();
-        this.quantity = qbInventoryItem.getQuantityOnHand();
+        this.quantity = Integer.valueOf(qbInventoryItem.getQuantityOnHand());
         this.size = customData.getOrDefault("itemsize", "");
         this.expiryDate = customData.getOrDefault("expirydate", "");
         this.isActive = Boolean.valueOf(qbInventoryItem.getIsActive()) ;
-        this.salesPrice = qbInventoryItem.getSalesPrice();
+        this.salesPrice = new BigDecimal(qbInventoryItem.getSalesPrice());
     }
 }
