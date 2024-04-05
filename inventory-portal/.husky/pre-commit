@@ -1,0 +1,3 @@
+cd inventory-portal
+npm run lint
+npm run format

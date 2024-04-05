@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import { ZodError } from 'zod';
 
 interface GenericResponse {
   isSuccess: boolean;
@@ -9,8 +9,8 @@ interface GenericResponse {
 }
 
 enum GenericResponseStatus {
-  SUCCESS = "success",
-  ERROR = "error",
+  SUCCESS = 'success',
+  ERROR = 'error',
 }
 
 export class GenericResponseModel {
@@ -24,9 +24,7 @@ export class GenericResponseModel {
       this.status = GenericResponseStatus.ERROR;
       this.errorCode = obj.zodError.errors[0]?.message;
     } else {
-      this.status = obj.isSuccess
-        ? GenericResponseStatus.SUCCESS
-        : GenericResponseStatus.ERROR;
+      this.status = obj.isSuccess ? GenericResponseStatus.SUCCESS : GenericResponseStatus.ERROR;
       this.body = obj.body;
       this.errorCode = obj.errorCode;
       this.errorMsg = obj.errorMsg;
