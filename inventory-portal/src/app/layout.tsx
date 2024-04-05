@@ -6,32 +6,35 @@ import { Toaster } from "@/components/ui/toaster";
 import NavBar from "@/components/nav-bar";
 
 const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
+	subsets: ["latin"],
+	variable: "--font-sans"
 });
 
 export const metadata: Metadata = {
-  title: "Inventory",
-  description: "Inventory Catalog",
+	title: "Inventory",
+	description: "Inventory Catalog",
+	icons: {
+		icon: "/favicon.ico"
+	}
 };
 
 export default function RootLayout({
-  children,
+	children
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={cn(
-          "h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}
-      >
-        <NavBar />
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body
+				className={cn(
+					"h-screen bg-background font-sans antialiased",
+					fontSans.variable
+				)}
+			>
+				<NavBar />
+				{children}
+				<Toaster />
+			</body>
+		</html>
+	);
 }
