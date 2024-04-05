@@ -95,7 +95,7 @@ async function InventoryDetails({
 
 				<div className="flex justify-between items-center">
 					<Label className="text-base">Last Sync</Label>
-					<p>{inventory.update_date?.toISOString()}</p>
+					<p>{inventory.update_date?.toLocaleString()}</p>
 				</div>
 			</div>
 		</div>
