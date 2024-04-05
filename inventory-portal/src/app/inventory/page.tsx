@@ -22,7 +22,7 @@ export default async function Inventory({
   const [totalPages, totalCount] = await fetchInventoryTotal(query, availableItems);
 
   return (
-    <div className="h-[90%] min-h-[93vh] bg-gray-200">
+    <div className="h-[90%] min-h-screen bg-gray-200">
       <div className="mx-5 flex flex-col gap-5">
         <div className="mt-2 flex justify-center">
           <Suspense fallback={<p>Loading...</p>}>
