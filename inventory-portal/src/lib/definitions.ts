@@ -3,4 +3,5 @@ export type InventorySortType =
 	| "price-desc"
 	| "quantity-asc"
 	| "quantity-desc"
-	| undefined;
+	| "item_code-asc"
+	| "item_code-desc";

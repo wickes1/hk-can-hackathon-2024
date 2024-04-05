@@ -3,14 +3,18 @@ import prisma from "./prisma";
 
 const ITEMS_PER_PAGE = 10;
 
-export async function fetchInventoryTotal(query: string) {
+export async function fetchInventoryTotal(
+	query: string,
+	availableItems?: boolean
+) {
 	const count = await prisma.inventory.count({
 		where: {
 			OR: [
 				{ bar_code: { contains: query, mode: "insensitive" } },
 				{ item_code: { contains: query, mode: "insensitive" } },
 				{ description: { contains: query, mode: "insensitive" } }
-			]
+			],
+			AND: availableItems ? [{ is_active: true }] : []
 		}
 	});
 
@@ -29,6 +33,10 @@ function getOrderBy(
 			return { quantity: "asc" };
 		case "quantity-desc":
 			return { quantity: "desc" };
+		case "item_code-asc":
+			return { item_code: "asc" };
+		case "item_code-desc":
+			return { item_code: "desc" };
 		default:
 			return { item_code: "asc" };
 	}
@@ -37,7 +45,8 @@ function getOrderBy(
 export async function findFilteredInventory(
 	query: string,
 	page: number,
-	sort?: InventorySortType
+	sort?: InventorySortType,
+	availableItems?: boolean
 ) {
 	const inventories = await prisma.inventory.findMany({
 		where: {
@@ -45,14 +54,11 @@ export async function findFilteredInventory(
 				{ bar_code: { contains: query, mode: "insensitive" } },
 				{ item_code: { contains: query, mode: "insensitive" } },
 				{ description: { contains: query, mode: "insensitive" } }
-			]
+			],
+			AND: availableItems ? [{ is_active: true }] : []
 		},
 		skip: (page - 1) * ITEMS_PER_PAGE,
 		take: ITEMS_PER_PAGE,
-		// if sort is price-asc, sort by price in ascending order
-		// if sort is price-desc, sort by price in descending order
-		// if sort is quantity-asc, sort by quantity in ascending order
-		// if sort is quantity-desc, sort by quantity in descending order
 		orderBy: getOrderBy(sort)
 	});
 

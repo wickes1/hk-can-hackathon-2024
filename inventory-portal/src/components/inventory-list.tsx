@@ -8,16 +8,19 @@ import { InventorySortType } from "@/lib/definitions";
 async function InventoryList({
 	query,
 	page,
-	sort
+	sort,
+	availableItems
 }: {
 	query: string;
 	page: number;
 	sort: InventorySortType;
+	availableItems: boolean;
 }) {
 	const inventories: inventory[] = await findFilteredInventory(
 		query,
 		page,
-		sort
+		sort,
+		availableItems
 	);
 
 	return (
