@@ -3,7 +3,11 @@ import prisma from './prisma';
 
 const ITEMS_PER_PAGE = 10;
 
-export async function fetchInventoryTotal(query: string, availableItems?: boolean) {
+export async function fetchInventoryTotal(
+  query: string,
+  availableItemsOnly?: boolean,
+  showInactiveItems?: boolean,
+) {
   const count = await prisma.inventory.count({
     where: {
       OR: [
@@ -11,7 +15,10 @@ export async function fetchInventoryTotal(query: string, availableItems?: boolea
         { item_code: { contains: query, mode: 'insensitive' } },
         { description: { contains: query, mode: 'insensitive' } },
       ],
-      AND: availableItems ? [{ is_active: true }] : [],
+      AND: [
+        availableItemsOnly ? { quantity: { gt: 0 } } : {},
+        showInactiveItems ? {} : { is_active: true },
+      ],
     },
   });
 
@@ -41,7 +48,8 @@ export async function findFilteredInventory(
   query: string,
   page: number,
   sort?: InventorySortType,
-  availableItems?: boolean,
+  availableItemsOnly?: boolean,
+  showInactiveItems?: boolean,
 ) {
   const inventories = await prisma.inventory.findMany({
     where: {
@@ -50,7 +58,10 @@ export async function findFilteredInventory(
         { item_code: { contains: query, mode: 'insensitive' } },
         { description: { contains: query, mode: 'insensitive' } },
       ],
-      AND: availableItems ? [{ is_active: true }] : [],
+      AND: [
+        availableItemsOnly ? { quantity: { gt: 0 } } : {},
+        showInactiveItems ? {} : { is_active: true },
+      ],
     },
     skip: (page - 1) * ITEMS_PER_PAGE,
     take: ITEMS_PER_PAGE,

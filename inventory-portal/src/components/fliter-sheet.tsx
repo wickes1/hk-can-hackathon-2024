@@ -24,7 +24,8 @@ import { Checkbox } from './ui/checkbox';
 
 const FormSchema = z.object({
   sort: string().optional(),
-  availableItems: z.boolean().optional(),
+  availableItemsOnly: z.boolean().optional(),
+  showInactiveItems: z.boolean().optional(),
 });
 
 export default function FilterSheet() {
@@ -34,24 +35,30 @@ export default function FilterSheet() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       sort: (searchParams.get('sort') as InventorySortType) || 'item_code-asc',
-      availableItems: searchParams.has('availableItems') || false,
+      availableItemsOnly: searchParams.has('availableItemsOnly') || false,
+      showInactiveItems: searchParams.has('showInactiveItems') || false,
     },
   });
 
   function handleSubmit(data: z.infer<typeof FormSchema>) {
-    const sort = data.sort as InventorySortType;
     const newSearchParams = new URLSearchParams(searchParams);
 
-    if (sort) {
-      newSearchParams.set('sort', sort);
+    if (data.sort) {
+      newSearchParams.set('sort', data.sort);
     } else {
       newSearchParams.delete('sort');
     }
 
-    if (data.availableItems) {
-      newSearchParams.set('availableItems', 'true');
+    if (data.availableItemsOnly) {
+      newSearchParams.set('availableItemsOnly', 'true');
     } else {
-      newSearchParams.delete('availableItems');
+      newSearchParams.delete('availableItemsOnly');
+    }
+
+    if (data.showInactiveItems) {
+      newSearchParams.set('showInactiveItems', 'true');
+    } else {
+      newSearchParams.delete('showInactiveItems');
     }
 
     const updatedUrl = `${pathname}?${newSearchParams.toString()}`;
@@ -110,7 +117,7 @@ export default function FilterSheet() {
                 />
                 <FormField
                   control={form.control}
-                  name="availableItems"
+                  name="availableItemsOnly"
                   render={({ field }) => (
                     <div>
                       <FormItem>
@@ -118,15 +125,15 @@ export default function FilterSheet() {
                           <div className="grid gap-4 py-4">
                             <div className="flex items-center gap-3">
                               <Checkbox
-                                id="availableItems"
+                                id="availableItemsOnly"
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                               />
                               <FormLabel
-                                htmlFor="availableItems"
+                                htmlFor="availableItemsOnly"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               >
-                                Show Available items only
+                                Show In Stock Items Only
                               </FormLabel>
                             </div>
                           </div>
@@ -135,6 +142,35 @@ export default function FilterSheet() {
                     </div>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="showInactiveItems"
+                  render={({ field }) => (
+                    <div>
+                      <FormItem>
+                        <FormControl>
+                          <div className="grid gap-4 py-4">
+                            <div className="flex items-center gap-3">
+                              <Checkbox
+                                id="showInactiveItems"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                              <FormLabel
+                                htmlFor="showInactiveItems"
+                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              >
+                                Show Inactive Items
+                              </FormLabel>
+                            </div>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    </div>
+                  )}
+                />
+
                 <SheetClose asChild>
                   <Button type="submit" className="mt-5 w-full">
                     Apply
