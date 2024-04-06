@@ -69,6 +69,7 @@ export default function UploadImageForm({
         className: 'bg-green-600 text-white',
       });
       router.back();
+      router.refresh();
     } else {
       // Handle error
       toast({
