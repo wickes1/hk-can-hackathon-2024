@@ -27,9 +27,9 @@ async function InventoryDetails({ inventory: inventory }: { inventory: inventory
               <Image
                 src={resp.image_url}
                 alt="inventory"
-                width={100}
-                height={100}
-                className="h-56 w-56 object-contain"
+                width={300}
+                height={300}
+                className="object-contain"
               />
             </>
           ) : (
