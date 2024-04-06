@@ -78,96 +78,83 @@ export default function FilterSheet() {
             <SheetTitle>Configuration</SheetTitle>
             <SheetDescription>Configure the search and filter options</SheetDescription>
           </SheetHeader>
-          <div className="flex w-full max-w-md flex-col gap-4">
+          <div className="mt-5 flex flex-col">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)}>
                 <FormField
                   control={form.control}
                   name="sort"
                   render={({ field }) => (
-                    <div>
-                      <FormItem>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="sort" className="text-right">
-                              Sorting
-                            </Label>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="col-span-3">
-                                  <SelectValue placeholder="Select an option" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="price-asc">Price - Low to High</SelectItem>
-                                <SelectItem value="price-desc">Price - High to Low</SelectItem>
-                                <SelectItem value="quantity-asc">Quantity - Low to High</SelectItem>
-                                <SelectItem value="quantity-desc">
-                                  Quantity - High to Low
-                                </SelectItem>
-                                <SelectItem value="item_code-asc">Item Code - A to Z</SelectItem>
-                                <SelectItem value="item_code-desc">Item Code - Z to A</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </FormItem>
-                    </div>
+                    <FormItem className="flex items-center justify-between gap-5">
+                      <div>
+                        <FormLabel htmlFor="sort" className="text-right">
+                          Sorting
+                        </FormLabel>
+                      </div>
+                      <div className="w-3/5">
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an option" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="price-asc">Price - Low to High</SelectItem>
+                            <SelectItem value="price-desc">Price - High to Low</SelectItem>
+                            <SelectItem value="quantity-asc">Quantity - Low to High</SelectItem>
+                            <SelectItem value="quantity-desc">Quantity - High to Low</SelectItem>
+                            <SelectItem value="item_code-asc">Item Code - A to Z</SelectItem>
+                            <SelectItem value="item_code-desc">Item Code - Z to A</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="availableItemsOnly"
                   render={({ field }) => (
-                    <div>
-                      <FormItem>
-                        <FormControl>
-                          <div className="grid gap-4 py-4">
-                            <div className="flex items-center gap-3">
-                              <Checkbox
-                                id="availableItemsOnly"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                              <FormLabel
-                                htmlFor="availableItemsOnly"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                Show In Stock Items Only
-                              </FormLabel>
-                            </div>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    </div>
+                    <FormItem>
+                      <FormControl>
+                        <div className="mt-5 flex items-center justify-between">
+                          <FormLabel
+                            htmlFor="availableItemsOnly"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Show In Stock Items Only
+                          </FormLabel>
+                          <Checkbox
+                            id="availableItemsOnly"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="showInactiveItems"
                   render={({ field }) => (
-                    <div>
-                      <FormItem>
-                        <FormControl>
-                          <div className="grid gap-4 py-4">
-                            <div className="flex items-center gap-3">
-                              <Checkbox
-                                id="showInactiveItems"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                              <FormLabel
-                                htmlFor="showInactiveItems"
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                              >
-                                Show Inactive Items
-                              </FormLabel>
-                            </div>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    </div>
+                    <FormItem>
+                      <FormControl>
+                        <div className="mt-5 flex items-center justify-between">
+                          <FormLabel
+                            htmlFor="showInactiveItems"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Show Inactive Items
+                          </FormLabel>
+                          <Checkbox
+                            id="showInactiveItems"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
                   )}
                 />
 

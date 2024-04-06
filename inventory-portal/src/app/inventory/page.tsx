@@ -28,29 +28,27 @@ export default async function Inventory({
   );
 
   return (
-    <div className="h-[90%] min-h-screen bg-gray-200">
-      <div className="mx-5 flex flex-col gap-5">
-        <div className="mt-2 flex justify-center">
-          <Suspense fallback={<p>Loading...</p>}>
-            <p className="text-lg">{totalCount} items found</p>
-          </Suspense>
-        </div>
-        <div className="grow">
-          <Suspense key={query + currentPage + sort} fallback={<InventoryListSkeleton />}>
-            <InventoryList
-              query={query}
-              page={currentPage}
-              sort={sort}
-              availableItemsOnly={availableItemsOnly}
-              showInactiveItems={showInactiveItems}
-            />
-          </Suspense>
-        </div>
-        <div className="mb-2 flex w-full justify-center self-end">
-          <Suspense key={query + currentPage} fallback={<PaginationSkeleton />}>
-            <Pagination totalPages={totalPages} />
-          </Suspense>
-        </div>
+    <div className="mx-5 flex flex-col gap-5">
+      <div className="mt-2 flex justify-center">
+        <Suspense fallback={<p>Loading...</p>}>
+          <p className="text-lg">{totalCount} items found</p>
+        </Suspense>
+      </div>
+      <div className="grow">
+        <Suspense key={query + currentPage + sort} fallback={<InventoryListSkeleton />}>
+          <InventoryList
+            query={query}
+            page={currentPage}
+            sort={sort}
+            availableItemsOnly={availableItemsOnly}
+            showInactiveItems={showInactiveItems}
+          />
+        </Suspense>
+      </div>
+      <div className="mb-2 flex w-full justify-center">
+        <Suspense key={query + currentPage} fallback={<PaginationSkeleton />}>
+          <Pagination totalPages={totalPages} />
+        </Suspense>
       </div>
     </div>
   );

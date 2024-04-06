@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('bg-background font-sans antialiased', fontSans.variable)}>
+      <body className={cn('bg-gray-200 font-sans antialiased', fontSans.variable)}>
         <NavBar />
         {children}
         <Toaster />
