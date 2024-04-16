@@ -1,6 +1,7 @@
 import { UTApi } from 'uploadthing/server';
+import { env } from './env';
 
 export const utapi = new UTApi({
-  apiKey: process.env.UPLOADTHING_SECRET,
+  apiKey: env.UPLOADTHING_SECRET,
   defaultKeyType: 'fileKey',
 });
