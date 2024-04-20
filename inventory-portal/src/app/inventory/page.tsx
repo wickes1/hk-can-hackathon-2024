@@ -1,8 +1,9 @@
 import InventoryList from '@/components/inventory-list';
 import Pagination from '@/components/pagination';
 import { InventoryListSkeleton, PaginationSkeleton } from '@/components/skeletons';
-import { fetchInventoryTotal } from '@/lib/data';
+import { fetchInventoryTotal, findFilteredInventory } from '@/lib/data';
 import { InventorySortType } from '@/lib/definitions';
+import { inventory } from '@prisma/client';
 import { Suspense } from 'react';
 
 export default async function Inventory({
@@ -26,6 +27,13 @@ export default async function Inventory({
     availableItemsOnly,
     showInactiveItems,
   );
+  const inventories: inventory[] = await findFilteredInventory(
+    query,
+    currentPage,
+    sort,
+    availableItemsOnly,
+    showInactiveItems,
+  );
 
   return (
     <div className="mx-5 flex flex-col gap-5">
@@ -36,13 +44,7 @@ export default async function Inventory({
       </div>
       <div className="grow">
         <Suspense key={query + currentPage + sort} fallback={<InventoryListSkeleton />}>
-          <InventoryList
-            query={query}
-            page={currentPage}
-            sort={sort}
-            availableItemsOnly={availableItemsOnly}
-            showInactiveItems={showInactiveItems}
-          />
+          <InventoryList inventories={inventories} />
         </Suspense>
       </div>
       <div className="mb-2 flex w-full justify-center">
