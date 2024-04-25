@@ -14,26 +14,25 @@ public class QBInventoryQueryRqFactory extends QBDataRetrievalQueryFactory {
     private final BigInteger qbQueryLimit = new BigInteger("100");
 
     public QBXML getAll(String qbRequestId, Date toDate){
-        createBaseQBXmlMsgRq();
-
+        QBXML qbxml = createBaseQBXmlMsgRq();
         // constructing ItemInventoryQuery
         ItemInventoryQueryRqType inventoryQuery = createBaseInventoryQuery(qbRequestId, QBQueryConstant.RecordActiveStatus.All);
         // use iterator to prevent query all data in once
         inventoryQuery.setIterator(QBQueryConstant.Iterator.Start.toString());
         inventoryQuery.setToModifiedDate(qbQueryModifiedDateformat.format(toDate));
-        addQuery(inventoryQuery);
+        addQuery(qbxml, inventoryQuery);
 
-        return getQbxml();
+        return qbxml;
     }
 
     public QBXML getNextIteration(String qbRequestId, String iteratorId){
-        createBaseQBXmlMsgRq();
+        QBXML qbxml = createBaseQBXmlMsgRq();
         ItemInventoryQueryRqType inventoryQuery = createBaseInventoryQuery(qbRequestId, QBQueryConstant.RecordActiveStatus.All);
         // continue iterating using iteratorId returned by previous iteration
         inventoryQuery.setIterator(QBQueryConstant.Iterator.Continue.toString());
         inventoryQuery.setIteratorID(iteratorId);
-        addQuery(inventoryQuery);
-        return getQbxml();
+        addQuery(qbxml, inventoryQuery);
+        return qbxml;
     }
 
     private ItemInventoryQueryRqType createBaseInventoryQuery(String qbRequestId, QBQueryConstant.RecordActiveStatus activeStatus){
